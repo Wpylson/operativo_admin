@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 class UploadBannerScreen extends StatefulWidget {
   static const String routeName = '/upload_banner_screen';
@@ -33,18 +33,50 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
   _uploadBannerToStorage(dynamic image) async {
     Reference ref = _storage.ref().child('Banners').child(fileName!);
     UploadTask uploadTask = ref.putData(image);
+    Navigator.pop(context);
     TaskSnapshot snapshot = await uploadTask;
     String downloadUrl = await snapshot.ref.getDownloadURL();
     return downloadUrl;
   }
 
   uploadToFireStore() async {
+    EasyLoading.show();
     if (_image != null) {
       String imageUrl = await _uploadBannerToStorage(_image);
       await _firestore.collection('banners').doc(fileName).set({
         'image': imageUrl,
+      }).whenComplete(() {
+        if (context.mounted) Navigator.pop(context);
+        EasyLoading.dismiss();
+        setState(() {
+          _image = null;
+        });
       });
     }
+  }
+
+  void displayMessage(String message) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+              title: const Text('Mensagem'),
+              content: Text(message),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text("Ok"),
+                ),
+              ],
+            ));
+  }
+
+  //Display a dialog message
+  void displayCircularIndicator() {
+    showDialog(
+        context: context,
+        builder: (context) => const CircularProgressIndicator.adaptive());
   }
 
   @override

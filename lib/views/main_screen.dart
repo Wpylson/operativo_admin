@@ -43,7 +43,7 @@ class _MainScreenState extends State<MainScreen> {
         break;
       case CategoriesScreen.routeName:
         setState(() {
-          _selectedItem = const CategoriesScreen();
+          _selectedItem = CategoriesScreen();
         });
         break;
       case ProductsScreen.routeName:

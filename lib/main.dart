@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:operativo_admin/firebase_options.dart';
 import 'package:operativo_admin/views/main_screen.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +26,7 @@ class MyApp extends StatelessWidget {
       ),
       themeMode: ThemeMode.dark,
       home: const MainScreen(),
+      builder: EasyLoading.init(),
     );
   }
 }
