@@ -3,6 +3,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:operativo_admin/views/banners/widgets/banner_widgets.dart';
 
 class UploadBannerScreen extends StatefulWidget {
   static const String routeName = '/upload_banner_screen';
@@ -140,6 +141,24 @@ class _UploadBannerScreenState extends State<UploadBannerScreen> {
               ),
             ],
           ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Divider(
+              color: Colors.grey,
+              height: 1,
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              alignment: Alignment.topLeft,
+              child: const Text(
+                'Banners',
+                style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+              ),
+            ),
+          ),
+          const BannerWidgets(),
         ],
       ),
     );

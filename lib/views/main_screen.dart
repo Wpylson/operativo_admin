@@ -96,7 +96,7 @@ class _MainScreenState extends State<MainScreen> {
             icon: CupertinoIcons.person_3,
           ),
           AdminMenuItem(
-            title: 'Withdrawl',
+            title: 'Withdraw',
             route: WithDrawScreen.routeName,
             icon: CupertinoIcons.money_dollar_circle,
           ),

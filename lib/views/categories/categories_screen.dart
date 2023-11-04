@@ -77,6 +77,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
             ),
             Divider(
               color: Colors.grey.shade400,
+              height: 1,
             ),
             Row(
               children: [
@@ -150,6 +151,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
               padding: EdgeInsets.all(8.0),
               child: Divider(
                 color: Colors.grey,
+                height: 1,
               ),
             ),
             Padding(
