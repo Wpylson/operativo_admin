@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:operativo_admin/views/categories/widgets/category_widgets.dart';
 
 class CategoriesScreen extends StatefulWidget {
   static const String routeName = '/categories_screen';
@@ -10,9 +14,12 @@ class CategoriesScreen extends StatefulWidget {
 
 class _CategoriesScreenState extends State<CategoriesScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   dynamic _image;
   String? fileName;
+  late String categoryName;
 
   _pickImage() async {
     FilePickerResult? result = await FilePicker.platform
@@ -26,9 +33,28 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
     }
   }
 
-  uploadCategory() {
+  _uploadCategoryBannerToStorage(dynamic image) async {
+    Reference ref = _storage.ref().child('catgeoryImages').child(fileName!);
+
+    UploadTask uploadTask = ref.putData(image);
+    TaskSnapshot snapshot = await uploadTask;
+    String downloadUrl = await snapshot.ref.getDownloadURL();
+    return downloadUrl;
+  }
+
+  uploadCategory() async {
+    EasyLoading.show();
     if (_formKey.currentState!.validate()) {
-      print("Good Guy");
+      String imageUrl = await _uploadCategoryBannerToStorage(_image);
+
+      await _firestore.collection('categories').doc(fileName).set(
+          {'image': imageUrl, 'categoryName': categoryName}).whenComplete(() {
+        EasyLoading.dismiss();
+        setState(() {
+          _image = null;
+          _formKey.currentState!.reset();
+        });
+      });
     } else {
       print("Bad guy");
     }
@@ -91,6 +117,9 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                   child: SizedBox(
                     width: 300,
                     child: TextFormField(
+                        onChanged: (value) {
+                          categoryName = value;
+                        },
                         validator: (value) {
                           if (value!.isEmpty) {
                             return 'Por favor, o nome da categoria não pode estar vazio';
@@ -117,6 +146,23 @@ class _CategoriesScreenState extends State<CategoriesScreen> {
                 ),
               ],
             ),
+            const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Divider(
+                color: Colors.grey,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                alignment: Alignment.topLeft,
+                child: const Text(
+                  'Categorias',
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+            const CategoryWidget(),
           ],
         ),
       ),
