@@ -29,6 +29,7 @@ class BannerWidgets extends StatelessWidget {
           itemBuilder: (context, index) {
             final bannerData = snapshot.data!.docs[index];
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
                   height: 100,
@@ -38,7 +39,7 @@ class BannerWidgets extends StatelessWidget {
                   ),
                 ),
                 Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  //crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
                       onPressed: () {},
@@ -55,7 +56,7 @@ class BannerWidgets extends StatelessWidget {
                       ),
                     ),
                   ],
-                )
+                ),
               ],
             );
           },
